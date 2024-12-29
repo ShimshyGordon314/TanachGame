@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanach Verse Game</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 20% 1fr;
+            gap: 20px;
+        }
+
+        .menu-area {
+            padding: 20px;
+            background-color: var(--card-background);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #verse-display {
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            background-color: var(--card-background);
+            direction: rtl;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+            height: 100px; /* Height for 2 lines of text */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #verse-text {
+            max-height: 100%;
+            text-align: center;
+            /* Enable text scaling */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        /* Rest of the styles remain the same */
+        /*[Previous styles for .filter-section, .checkbox-group, buttons, etc.]*/
+        .filter-section {
+        margin-bottom: 30px;
+    }
+
+    .filter-section h2 {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+        color: var(--primary-color);
+    }
+
+    .checkbox-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+        transition: background-color 0.2s;
+    }
+
+    .checkbox-label:hover {
+        background-color: var(--background-color);
+    }
+
+    .control-buttons {
+        margin: 20px 0;
+    }
+
+    button {
+        font-size: 16px;
+        margin: 10px;
+        padding: 12px 24px;
+        border: none;
+        border-radius: var(--border-radius);
+        background-color: var(--secondary-color);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .shortcuts {
+        margin: 20px 0;
+        font-size: 14px;
+        color: #666;
+        background-color: var(--card-background);
+        padding: 10px;
+        border-radius: var(--border-radius);
+        display: inline-block;
+    }
+
+        #info-section {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            display: none;
+            background-color: var(--card-background);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            direction: rtl;
+            table-layout: fixed; /* Forces equal column widths */
+        }
+
+        th, td {
+            width: 20%; /* Equal width for all columns */
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        th {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: normal;
+    }
+
+    th:first-child {
+        border-top-right-radius: 8px;
+    }
+
+    th:last-child {
+        border-top-left-radius: 8px;
+    }
+
+    .empty-field {
+        color: #999;
+        font-style: italic;
+    }
+
+    kbd {
+        background-color: #f7f7f7;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 2px 6px;
+        font-size: 12px;
+    }
+    </style>
+
+</head>
+<body>
+    <div class="menu-area">
+        <div class="filter-section">
+            <h2>Filters</h2>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" value="torah" checked onchange="updateFilters()">
+                    Torah
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" value="neviim" checked onchange="updateFilters()">
+                    Neviim
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" value="ketuvim" checked onchange="updateFilters()">
+                    Ketuvim
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="content-container">
+            <h1>Tanach Verse Game</h1>
+            <div id="verse-display">
+                <div id="verse-text"></div>
+            </div>
+            
+            <div class="control-buttons">
+                <button onclick="showAnswer()">Show Answer</button>
+                <button onclick="nextVerse()">Next Verse</button>
+            </div>
+
+            <div class="shortcuts">
+                Keyboard shortcuts: 
+                <kbd>A</kbd> - Show Answer | 
+                <kbd>N</kbd> - Next Verse
+            </div>
+
+            <div id="info-section">
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>ספר</th>
+                            <th>פרשה/הפטרה</th>
+                            <th>פרק</th>
+                            <th>פסוק</th>
+                            <th>עליה</th>
+                        </tr>
+                        <tr>
+                            <td id="sefer"></td>
+                            <td id="parsha"></td>
+                            <td id="perek"></td>
+                            <td id="passuk"></td>
+                            <td id="aliya"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Previous JavaScript remains exactly the same
+        let verses = [];
+        let currentVerse;
+        const SECTIONS = {
+            torah: { start: 1, end: 5847 },
+            neviim: { start: 5848, end: 15146 },
+            ketuvim: { start: 15147, end: 23214 }
+        };
+
+        // Load and parse the CSV file
+        fetch('list.csv')
+            .then(response => response.text())
+            .then(data => {
+                const lines = data.split('\n');
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() !== '') {
+                        verses.push({ ...parseCSVLine(lines[i]), index: i });
+                    }
+                }
+                nextVerse();
+            })
+            .catch(error => console.error('Error loading verses:', error));
+
+        function parseCSVLine(line) {
+            const parts = line.split(',');
+            return {
+                text: parts[0],
+                sefer: parts[1],
+                parsha: parts[2],
+                passukInPerek: parts[3],
+                perek: parts[5],
+                aliya: parts[6]
+            };
+        }
+
+        function getSelectedSections() {
+            return Array.from(document.querySelectorAll('.checkbox-group input:checked'))
+                .map(checkbox => checkbox.value);
+        }
+
+        function updateFilters() {
+            nextVerse();
+        }
+
+        function getRandomVerseFromSection() {
+            const selectedSections = getSelectedSections();
+            if (selectedSections.length === 0) {
+                alert("Please select at least one section");
+                document.querySelector('.checkbox-group input').checked = true;
+                return verses[0];
+            }
+
+            const filteredVerses = verses.filter(verse => {
+                return selectedSections.some(section => {
+                    const { start, end } = SECTIONS[section];
+                    return verse.index >= start && verse.index <= end;
+                });
+            });
+
+            const randomIndex = Math.floor(Math.random() * filteredVerses.length);
+            return filteredVerses[randomIndex];
+        }
+
+        function showAnswer() {
+            const infoSection = document.getElementById('info-section');
+            infoSection.style.display = 'block';
+            
+            document.getElementById('sefer').textContent = currentVerse.sefer;
+            document.getElementById('parsha').textContent = currentVerse.parsha || '-';
+            document.getElementById('perek').textContent = currentVerse.perek;
+            document.getElementById('passuk').textContent = currentVerse.passukInPerek;
+            
+            const aliyaCell = document.getElementById('aliya');
+            if (currentVerse.aliya && currentVerse.aliya.trim()) {
+                aliyaCell.textContent = currentVerse.aliya;
+                aliyaCell.className = '';
+            } else {
+                aliyaCell.textContent = '-';
+                aliyaCell.className = 'empty-field';
+            }
+        }
+
+        function nextVerse() {
+            currentVerse = getRandomVerseFromSection();
+            document.getElementById('verse-display').textContent = currentVerse.text;
+            document.getElementById('info-section').style.display = 'none';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.key.toLowerCase() === 'a') {
+                showAnswer();
+            } else if (event.key.toLowerCase() === 'n') {
+                nextVerse();
+            }
+        });
+    </script>
+</body>
+</html>
