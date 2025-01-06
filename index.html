@@ -23,12 +23,85 @@
             display: grid;
             grid-template-columns: 20% 1fr;
             gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        /* Mobile layout */
+        body.mobile {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 10px;
+        }
+
+        .view-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--card-background);
+            padding: 8px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--secondary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
 
         .menu-area {
             padding: 20px;
             background-color: var(--card-background);
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile .menu-area {
+            padding: 10px;
+            margin: 10px;
+            border-radius: var(--border-radius);
         }
 
         .main-content {
@@ -40,10 +113,19 @@
             box-sizing: border-box;
         }
 
+        .mobile .main-content {
+            padding: 10px;
+        }
+
         .content-container {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
+        }
+
+        .mobile .content-container {
+            max-width: 100%;
+            padding: 0 10px;
         }
 
         #verse-display {
@@ -56,86 +138,116 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             width: 100%;
             box-sizing: border-box;
-            height: 100px; /* Height for 2 lines of text */
+            min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
         }
 
+        .mobile #verse-display {
+            font-size: 20px;
+            padding: 15px;
+            margin: 10px 0;
+            min-height: 100px;
+        }
+
         #verse-text {
-            max-height: 100%;
             text-align: center;
-            /* Enable text scaling */
+            max-height: 100%;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
             width: 100%;
         }
 
-        /* Rest of the styles remain the same */
-        /*[Previous styles for .filter-section, .checkbox-group, buttons, etc.]*/
         .filter-section {
-        margin-bottom: 30px;
-    }
+            margin-bottom: 30px;
+        }
 
-    .filter-section h2 {
-        font-size: 1.2em;
-        margin-bottom: 15px;
-        color: var(--primary-color);
-    }
+        .mobile .filter-section {
+            margin-bottom: 15px;
+        }
 
-    .checkbox-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+        .filter-section h2 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
 
-    .checkbox-label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        padding: 5px;
-        border-radius: 5px;
-        transition: background-color 0.2s;
-    }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-    .checkbox-label:hover {
-        background-color: var(--background-color);
-    }
+        .mobile .checkbox-group {
+            flex-direction: row;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
 
-    .control-buttons {
-        margin: 20px 0;
-    }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
 
-    button {
-        font-size: 16px;
-        margin: 10px;
-        padding: 12px 24px;
-        border: none;
-        border-radius: var(--border-radius);
-        background-color: var(--secondary-color);
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+        .checkbox-label:hover {
+            background-color: var(--background-color);
+        }
 
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
+        .control-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
 
-    .shortcuts {
-        margin: 20px 0;
-        font-size: 14px;
-        color: #666;
-        background-color: var(--card-background);
-        padding: 10px;
-        border-radius: var(--border-radius);
-        display: inline-block;
-    }
+        .mobile .control-buttons {
+            margin: 10px 0;
+            flex-direction: column;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--secondary-color);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile button {
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .shortcuts {
+            margin: 20px 0;
+            font-size: 14px;
+            color: #666;
+            background-color: var(--card-background);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            display: inline-block;
+        }
+
+        .mobile .shortcuts {
+            display: none;
+        }
 
         #info-section {
             margin-top: 20px;
@@ -146,6 +258,11 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             width: 100%;
             box-sizing: border-box;
+        }
+
+        .mobile #info-section {
+            padding: 10px;
+            margin-top: 10px;
         }
 
         .table-container {
@@ -159,11 +276,16 @@
             border-spacing: 0;
             margin-top: 20px;
             direction: rtl;
-            table-layout: fixed; /* Forces equal column widths */
+            table-layout: fixed;
+        }
+
+        .mobile table {
+            margin-top: 10px;
+            font-size: 14px;
         }
 
         th, td {
-            width: 20%; /* Equal width for all columns */
+            width: 20%;
             border: 1px solid #e0e0e0;
             padding: 12px;
             text-align: center;
@@ -172,36 +294,48 @@
             text-overflow: ellipsis;
         }
 
+        .mobile th, .mobile td {
+            padding: 8px;
+        }
+
         th {
-        background-color: var(--primary-color);
-        color: white;
-        font-weight: normal;
-    }
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: normal;
+        }
 
-    th:first-child {
-        border-top-right-radius: 8px;
-    }
+        th:first-child {
+            border-top-right-radius: 8px;
+        }
 
-    th:last-child {
-        border-top-left-radius: 8px;
-    }
+        th:last-child {
+            border-top-left-radius: 8px;
+        }
 
-    .empty-field {
-        color: #999;
-        font-style: italic;
-    }
+        .empty-field {
+            color: #999;
+            font-style: italic;
+        }
 
-    kbd {
-        background-color: #f7f7f7;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        padding: 2px 6px;
-        font-size: 12px;
-    }
+        kbd {
+            background-color: #f7f7f7;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
     </style>
-
 </head>
 <body>
+    <div class="view-toggle">
+        <span>Desktop</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="view-toggle-input" onchange="toggleView()">
+            <span class="slider"></span>
+        </label>
+        <span>Mobile</span>
+    </div>
+
     <div class="menu-area">
         <div class="filter-section">
             <h2>Filters</h2>
@@ -264,7 +398,13 @@
     </div>
     
     <script>
-        // Previous JavaScript remains exactly the same
+        // Add this new function at the beginning of your script section
+        function toggleView() {
+            const isMobile = document.getElementById('view-toggle-input').checked;
+            document.body.classList.toggle('mobile', isMobile);
+        }
+
+        // The rest of the script remains exactly the same as in your original code
         let verses = [];
         let currentVerse;
         const SECTIONS = {
